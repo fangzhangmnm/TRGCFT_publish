@@ -43,8 +43,19 @@ class GILT_options:
     record_S:bool=False
 
 recorded_S=[]
+
+def svd_by_R(A,dimR_leg:'tuple[int]'=None,**kwargs):
+    if dimR_leg is None: dimR_leg=(A.shape[0],)
+    u,s,vh=torch.eye(A.shape[0]),torch.zeros(A.shape[0]),torch.eye(A.shape[0])
+    for iR in range(len(dimR_leg)):
+        start=sum(dimR_leg[:iR])
+        end=sum(dimR_leg[:iR+1])
+        u_,s_,vh_=svd(A[start:end,start:end],**kwargs)
+        u[start:end,start:end],s[start:end],vh[start:end,start:end]=u_,s_,vh_
+    return u,s,vh
+
     
-def GILT_getuvh(EEh,options:GILT_options=GILT_options()):
+def GILT_getuvh(EEh,dimR_leg:'tuple[int]'=None,options:GILT_options=GILT_options()):
     d=EEh.shape[0]
     uu,vvh=torch.eye(d),torch.eye(d)
     for _iter in range(options.nIter):

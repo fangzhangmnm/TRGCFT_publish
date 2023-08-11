@@ -45,6 +45,8 @@ class Ising2D(TNModel):
         W=torch.stack([torch.stack([a,b]),torch.stack([a,-b])])
         sz=torch.stack([torch.exp(beta*h),torch.exp(-beta*h)])*op
         return contract('Ai,Aj,Ak,Al,A->ijkl',W,W,W,W,sz)#UDLR
+    def get_dimR(self,Z2=True):
+        return ((1,1),)*self.spacial_dim if Z2 else ((2,0),)*self.spacial_dim
 
     
 @_register_model
