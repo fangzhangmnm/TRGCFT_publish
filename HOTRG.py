@@ -10,13 +10,10 @@ import numpy as np
 from torch.linalg import svd
 
 
-from Z2Tensor import RepDim,RepMat,Z2_sectors,Z2_sector_norm,project_Z2
+from Z2Tensor import RepDim_Z2,RepMat_Z2,Z2_sectors,Z2_sector_norm,project_Z2
 
 
 #============================= Forward Layers ======================================
-
-def is_isometry(g):
-    return torch.isclose(g@g.T.conj(),torch.eye(g.shape[0])).all()
 
 
 @dataclass
@@ -46,7 +43,7 @@ class HOTRGLayer:
         else:
             w=self.ww[iAxis-1]
             if self.dimR:
-                P=RepMat(self.dimR[iAxis][0],self.dimR[iAxis][1])
+                P=RepMat_Z2(self.dimR[iAxis][0],self.dimR[iAxis][1])
                 w=contract('ab,bij->aij',w,P)
             else:
                 w=w.reshape(-1,self.tensor_shape[iLeg],self.tensor_shape[iLeg])
