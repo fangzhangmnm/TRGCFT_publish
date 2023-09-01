@@ -22,6 +22,13 @@ python run_find_critical_temp.py --filename data/hotrg_X${MAX_DIM}_Tc.pth --nLay
 python run_HOTRG.py --filename data/hotrg_X${MAX_DIM}.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM}  --mcf_enabled --model Ising2D --params_file data/hotrg_X${MAX_DIM}_Tc.pth
 python run_plot_scdims.py --filename data/hotrg_X${MAX_DIM} --tensor_path data/hotrg_X${MAX_DIM}.pth --is_HOTRG --num_scaling_dims 32
 
+# with GILT, without MCF
+python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_noMCF.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --model Ising2D --params_file data/hotrg_gilt_X${MAX_DIM}_Tc.pth
+python run_plot_scdims.py --filename data/hotrg_gilt_X${MAX_DIM}_noMCF --tensor_path data/hotrg_gilt_X${MAX_DIM}_noMCF.pth --is_HOTRG --num_scaling_dims 32
+
+# without GILT, without MCF
+python run_HOTRG.py --filename data/hotrg_X${MAX_DIM}_noMCF.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --model Ising2D --params_file data/hotrg_X${MAX_DIM}_Tc.pth
+python run_plot_scdims.py --filename data/hotrg_X${MAX_DIM}_noMCF --tensor_path data/hotrg_X${MAX_DIM}_noMCF.pth --is_HOTRG --num_scaling_dims 32
 
 # eigenvalue of layers
 python run_get_ltrg_eigvecs.py --filename data/layers/hotrg_gilt_X24_lTRG_gilt_L2.pth --tensor_path data/hotrg_gilt_X24.pth --iLayer 2 --mcf_enabled --gilt_enabled  --svd_num_eigvecs 32
