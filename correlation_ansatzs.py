@@ -20,6 +20,11 @@ def high_temp_correlation(x,A,zeta,delta): #high temperature
 high_temp_correlation.eq='{0:.2e}e^(-x/ζ)/x^(2 Δ),ζ={1:.2e},Δ={2:.4f}'
 high_temp_correlation.p0=(1,100,0.1)
 
+def scale_dependent_delta(x,A,zeta,delta,m0):
+    corr=A*np.exp(-x/zeta)*x**(-2*delta)
+    return (delta+x/(2*zeta))/(1+m0**2/corr)
+scale_dependent_delta.eq='(∆+x/(2 ζ))/(1+m0^2/corr)'
+
 # def low_temp_correlation3(x,A,zeta,delta,n): #low temperature
 #     return A*(1+(zeta/x)**n)**(2*delta/n)
 # low_temp_correlation3.eq='{0:.2e}(1+(ζ/x)^n)^(2 ∆/n),ζ={1:.2e},∆={2:.4f},n={3:.1f}'

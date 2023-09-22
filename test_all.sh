@@ -70,6 +70,11 @@ python run_calculate_correlation.py --filename data/hotrg_gilt_X24_correlation.p
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_lowB_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X24_lowB.pth --log2Size 30
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_highB_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X24_highB.pth --log2Size 30
 
+python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_observables.csv --tensors_filename data/hotrg_gilt_X24.pth --observables magnetization --double_layer
+python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_lowB_observables.csv --tensors_filename data/hotrg_gilt_X24_lowB.pth --observables magnetization --double_layer
+python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_highB_observables.csv --tensors_filename data/hotrg_gilt_X24_highB.pth --observables magnetization --double_layer
+
+
 # nogilt, 00, nogilt 00
 python run_calculate_correlation.py --filename data/hotrg_X24_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_X24.pth --log2Size 30
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_correlation_00.pkl --points_filename data/2pt_correlation_points_30_00.pkl --tensors_filename data/hotrg_gilt_X24.pth --log2Size 30
@@ -89,7 +94,17 @@ python run_calculate_correlation.py --filename data/hotrg_gilt_X24_smearing_corn
 python run_calculate_correlation.py --filename data/hotrg_X24_torus_correlation_y_10.pkl --points_filename data/torus_correlation_points_y_10.pkl --tensors_filename data/hotrg_X24.pth --log2Size 10
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_torus_correlation_y_10.pkl --points_filename data/torus_correlation_points_y_10.pkl --tensors_filename data/hotrg_gilt_X24.pth --log2Size 10
 
+# data/torus_correlation_points_y_mid_10.pkl
+python run_calculate_correlation.py --filename data/hotrg_X24_torus_correlation_y_mid_10.pkl --points_filename data/torus_correlation_points_y_mid_10.pkl --tensors_filename data/hotrg_X24.pth --log2Size 10
+python run_calculate_correlation.py --filename data/hotrg_gilt_X24_torus_correlation_y_mid_10.pkl --points_filename data/torus_correlation_points_y_mid_10.pkl --tensors_filename data/hotrg_gilt_X24.pth --log2Size 10
+
 # torus big, y=0
 # data/torus_correlation_points_30_00.pkl
 python run_calculate_correlation.py --filename data/hotrg_X24_torus_correlation_30_00.pkl --points_filename data/torus_correlation_points_30_00.pkl --tensors_filename data/hotrg_X24.pth --log2Size 30
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_torus_correlation_30_00.pkl --points_filename data/torus_correlation_points_30_00.pkl --tensors_filename data/hotrg_gilt_X24.pth --log2Size 30
+
+# torus big, y=mid
+# data/torus_correlation_points_30_mid.pkl
+python run_calculate_correlation.py --filename data/hotrg_X24_torus_correlation_30_mid.pkl --points_filename data/torus_correlation_points_30_mid.pkl --tensors_filename data/hotrg_X24.pth --log2Size 30
+python run_calculate_correlation.py --filename data/hotrg_gilt_X24_torus_correlation_30_mid.pkl --points_filename data/torus_correlation_points_30_mid.pkl --tensors_filename data/hotrg_gilt_X24.pth --log2Size 30
+

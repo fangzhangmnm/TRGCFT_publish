@@ -189,6 +189,16 @@ data_count_axis=100
 coordsss=generate_torus_correlation_points(log2Size,data_count_axis,fixed_y=0)
 validate_and_save('data/torus_correlation_points_30_00.pkl',coordsss,(2**log2Size,2**log2Size))
 
+log2Size=10
+data_count_axis=30
+coordsss=generate_torus_correlation_points(log2Size,data_count_axis,fixed_y=2**(log2Size-1))
+validate_and_save('data/torus_correlation_points_y_mid_10.pkl',coordsss,(2**log2Size,2**log2Size))
+
+log2Size=30
+data_count_axis=100
+coordsss=generate_torus_correlation_points(log2Size,data_count_axis,fixed_y=2**(log2Size-1))
+validate_and_save('data/torus_correlation_points_30_mid.pkl',coordsss,(2**log2Size,2**log2Size))
+
 # smearing between edge
 # filename='data/smearing_between_edge_10.pkl'
 # lattice_size=(1024,1024)
