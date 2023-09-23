@@ -6,50 +6,26 @@ MAX_DIM=24
 
 # take beta_critical as 0.440684
 
-# scan with interval 0.000010
+BETAS=(
+    "0.440684"
+    "0.440683" "0.440682" "0.440681" "0.440680" "0.440679" "0.440678" "0.440677" "0.440676" "0.440675"
+    "0.440685" "0.440686" "0.440687" "0.440688" "0.440689" "0.440690" "0.440691" "0.440692" "0.440693"
+    "0.440674" "0.440664" "0.440654" "0.440644" "0.440634" "0.440624" "0.440614" "0.440604" "0.440594"
+    "0.440694" "0.440704" "0.440714" "0.440724" "0.440734" "0.440744" "0.440754" "0.440764" "0.440774"
+    "0.440784" "0.440884" "0.440984" "0.441084" "0.441184" "0.441284" "0.441384" "0.441484" "0.441584"
+    "0.440574" "0.440474" "0.440374" "0.440274" "0.440174" "0.440074" "0.439974" "0.439874" "0.439774"
+)
 
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440684.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440684}'
+for BETA in "${BETAS[@]}";
+do
+    python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":'${BETA}'}'
+    python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --log2Size 30
+    python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --observables magnetization --double_layer
+done
 
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440674.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440674}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440664.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440664}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440654.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440654}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440644.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440644}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440634.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440634}'
+# 2pt_correlation_points_30_appended
 
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440694.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440694}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440704.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440704}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440714.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440714}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440724.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440724}'
-python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440734.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440734}'
-
-
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440684_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440684.pth --log2Size 30
-
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440674_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440674.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440664_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440664.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440654_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440654.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440644_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440644.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440634_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440634.pth --log2Size 30
-
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440694_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440694.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440704_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440704.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440714_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440714.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440724_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440724.pth --log2Size 30
-python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440734_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440734.pth --log2Size 30
-
-
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440684_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440684.pth --observables magnetization --double_layer
-
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440674_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440674.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440664_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440664.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440654_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440654.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440644_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440644.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440634_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440634.pth --observables magnetization --double_layer
-
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440694_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440694.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440704_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440704.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440714_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440714.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440724_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440724.pth --observables magnetization --double_layer
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440734_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/0.440734.pth --observables magnetization --double_layer
-
-
+for BETA in "${BETAS[@]}";
+do
+    python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}_correlation_appended.pkl --points_filename data/2pt_correlation_points_30_appended.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --log2Size 30
+done

@@ -1,4 +1,4 @@
-import argparse
+import argparse,os
 
 
 parser = argparse.ArgumentParser(description='Evaluate correlation')
@@ -7,6 +7,7 @@ parser.add_argument('--tensors_filename', type=str)
 parser.add_argument('--points_filename', type=str)
 parser.add_argument('--log2Size', type=int)
 parser.add_argument('--device', type=str,default='cuda:0')
+parser.add_argument('--overwrite', action='store_true')
 
 
 args=parser.parse_args()
@@ -14,6 +15,11 @@ filename=args.filename
 tensors_filename=args.tensors_filename
 points_filename=args.points_filename
 log2Size=args.log2Size
+
+if os.path.exists(filename) and not args.overwrite:
+    print('file already exists: ',filename)
+    print('use --overwrite to overwrite')
+    exit()
 
 
 import torch

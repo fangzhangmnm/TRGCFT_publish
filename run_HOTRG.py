@@ -1,7 +1,7 @@
 if __name__ != '__main__':
     assert False, 'This file is not meant to be imported'
 
-import argparse
+import argparse,os
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--filename', type=str, required=True) # data/hotrg_gilt_X24
@@ -22,16 +22,13 @@ parser.add_argument('--mcf_phase_iter2', type=int, default=10)
 parser.add_argument('--hotrg_sanity_check', action='store_true')
 parser.add_argument('--version', type=int, default=1)
 parser.add_argument('--device', type=str, default='cuda:0')
-parser.add_argument('--override', action='store_true')
+parser.add_argument('--overwrite', action='store_true')
 
 args = parser.parse_args()
 options=vars(args)
-
-# check if file exists
-import os
-if os.path.exists(options['filename']) and not options['override']:
+if os.path.exists(options['filename']) and not options['overwrite']:
     print('file already exists: ',options['filename'])
-    print('use --override to override')
+    print('use --overwrite to overwrite')
     exit()
 
 print('loading library...')

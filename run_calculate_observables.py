@@ -1,7 +1,7 @@
 if __name__ != '__main__':
     assert False, 'This file is not meant to be imported'
 
-import argparse
+import argparse,os
 parser = argparse.ArgumentParser()
 
 
@@ -13,7 +13,7 @@ parser.add_argument('--calc_binder', action='store_true')
 parser.add_argument('--double_layer', action='store_true')
 
 parser.add_argument('--device', type=str, default='cuda:0')
-parser.add_argument('--override', action='store_true')
+parser.add_argument('--overwrite', action='store_true')
 args = parser.parse_args()
 
 options=vars(args)
@@ -22,10 +22,10 @@ tensors_filename=options['tensors_filename']
 output_filename=options['output_filename']
 
 import os
-if os.path.exists(output_filename) and not options['override']:
+if os.path.exists(output_filename) and not options['overwrite']:
     print('file already exists: ',output_filename)
-    print('use --override to override')
-    quit()
+    print('use --overwrite to overwrite')
+    exit()
 
 
 print('loading library...')

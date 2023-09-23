@@ -15,6 +15,11 @@ def critical_correlation(x,A,delta): #critical temperature
 critical_correlation.eq='{0:.2e}x^(-2 Δ),Δ={1:.4f}'
 critical_correlation.p0=(1,0.1)
 
+def critical_exponent(tau,A,k): #critical temperature
+    return A*tau**k
+critical_exponent.eq='A τ^k,A={0:.2e},k={1:.4f}'
+critical_exponent.p0=(1,1)
+
 def high_temp_correlation(x,A,zeta,delta): #high temperature
     return A*np.exp(-x/zeta)*x**(-2*delta)
 high_temp_correlation.eq='{0:.2e}e^(-x/ζ)/x^(2 Δ),ζ={1:.2e},Δ={2:.4f}'
@@ -29,6 +34,23 @@ scale_dependent_delta.eq='(∆+x/(2 ζ))/(1+m0^2/corr)'
 #     return A*(1+(zeta/x)**n)**(2*delta/n)
 # low_temp_correlation3.eq='{0:.2e}(1+(ζ/x)^n)^(2 ∆/n),ζ={1:.2e},∆={2:.4f},n={3:.1f}'
 # low_temp_correlation3.p0=(1,100,0.1,2)
+
+def get_low_temp_correlation_known_m0(m0):
+    def low_temp_correlation(x,A,zeta,delta):
+        return A*np.exp(-x/zeta)*x**(-2*delta)+m0**2
+    low_temp_correlation.eq='{0:.2e}e^(-x/ζ)/x^(2 Δ)+m0^2,ζ={1:.2e},Δ={2:.4f},m0='+'{0:.3f}'.format(m0)
+    low_temp_correlation.p0=(1,1000,0.1)
+    return low_temp_correlation
+
+def low_temp_correlation_with_m0(x,A,zeta,delta,m0):  #low temperature nikko
+    return A*np.exp(-x/zeta)*x**(-2*delta)+m0**2
+low_temp_correlation_with_m0.eq='{0:.2e}e^(-x/ζ)/x^(2 Δ)+m0^2,ζ={1:.2e},Δ={2:.4f},m0={3:.3f}'
+low_temp_correlation_with_m0.p0=(1,1000,0.1,0.1)
+
+def low_temp_correlation_softmax(x,A,zeta,delta,B):
+    return A*(zeta**(-1/B)+x**(-1/B))**(2*delta*B)
+low_temp_correlation_softmax.eq='{0:.2e}(ζ^(-1/B)+x^(-1/B))^(2 ∆ B),ζ={1:.2e},∆={2:.4f},B={3:.1f}'
+low_temp_correlation_softmax.p0=(1,100,0.1,1)
 
 def low_temp_correlation_1(x,A,zeta,delta):  #low temperature
     return A*(1/zeta+1/x)**(2*delta)
