@@ -44,6 +44,7 @@ def _HOSVD_layer_2D(T1,T2,max_dim):
     wP=w.reshape(-1,T1.shape[2],T2.shape[2])
         
     Tn=contract('ijkl,jmno,akn,blo->abim',T1,T2,wP,wP.conj())
+    # import opt_einsum;print(opt_einsum.contract_path('ijkl,jmno,akn,blo->abim',T1,T2,wP,wP.conj()))
     return Tn,HOTRGLayer(tensor_shape=T1.shape,ww=[w])
 
 def HOSVD_layer(T1,T2,max_dim)->"tuple[torch.Tensor,HOTRGLayer]":

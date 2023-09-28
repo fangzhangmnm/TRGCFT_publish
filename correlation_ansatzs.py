@@ -25,6 +25,11 @@ def high_temp_correlation(x,A,zeta,delta): #high temperature
 high_temp_correlation.eq='{0:.2e}e^(-x/ζ)/x^(2 Δ),ζ={1:.2e},Δ={2:.4f}'
 high_temp_correlation.p0=(1,100,0.1)
 
+def high_temp_correlation_with_noice(x,A,zeta,delta,noise_level): #high temperature
+    return np.maximum(A*np.exp(-x/zeta)*x**(-2*delta),noise_level)
+high_temp_correlation_with_noice.eq='{0:.2e}e^(-x/ζ)/x^(2 Δ),ζ={1:.2e},Δ={2:.4f}'
+high_temp_correlation_with_noice.p0=(1,100,0.1,0.01)
+
 def scale_dependent_delta(x,A,zeta,delta,m0):
     corr=A*np.exp(-x/zeta)*x**(-2*delta)
     return (delta+x/(2*zeta))/(1+m0**2/corr)
