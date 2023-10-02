@@ -64,7 +64,7 @@ for observable_name in options['observables']:
         T_op=T_op_momentss[iLayer][1]
 
         logZ=(logTotal+trace_tensor(T).abs().log())/2**iLayer
-        moment1=(trace_two_tensors(T_op)/trace_two_tensors(T)).abs().sqrt()
+        moment1=(trace_tensor(T_op)/trace_tensor(T))
 
         key=(iLayer,tuple(params.values()))
 

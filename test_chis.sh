@@ -11,3 +11,4 @@ do
     python run_HOTRG.py --filename data/hotrg_gilt_chis/X${MAX_DIM}/tensor.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params_file data/hotrg_gilt_chis/X${MAX_DIM}/Tc.pth
     python run_plot_scdims.py --filename data/hotrg_gilt_chis/X${MAX_DIM}/plots --tensor_path data/hotrg_gilt_chis/X${MAX_DIM}/tensor.pth --is_HOTRG --num_scaling_dims 32
 done
+

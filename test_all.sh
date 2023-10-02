@@ -17,10 +17,6 @@ python run_plot_scdims.py --filename data/hotrg_gilt_X${MAX_DIM}_lowB --tensor_p
 python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_highB.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":0.440694}'
 python run_plot_scdims.py --filename data/hotrg_gilt_X${MAX_DIM}_highB --tensor_path data/hotrg_gilt_X${MAX_DIM}_highB.pth --is_HOTRG --num_scaling_dims 32
 
-# python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --observables magnetization --double_layer
-# for highB
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_highB_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_highB.pth --observables magnetization --double_layer
-
 # without GILT
 python run_find_critical_temp.py --filename data/hotrg_X${MAX_DIM}_Tc.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --model Ising2D --param_name beta --param_min 0.4406 --param_max 0.4407 --observable_name magnetization --mcf_enabled
 python run_HOTRG.py --filename data/hotrg_X${MAX_DIM}.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM}  --mcf_enabled --model Ising2D --params_file data/hotrg_X${MAX_DIM}_Tc.pth
@@ -74,7 +70,7 @@ python run_calculate_correlation.py --filename data/hotrg_gilt_X24_correlation.p
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_lowB_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X24_lowB.pth --log2Size 30
 python run_calculate_correlation.py --filename data/hotrg_gilt_X24_highB_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X24_highB.pth --log2Size 30
 
-python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_observables.csv --tensors_filename data/hotrg_gilt_X24.pth --observables magnetization --double_layer
+python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_observables.csv --tensors_filename data/hotrg_gilt_X24.pth --observables magnetization --double_layer --device
 python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_lowB_observables.csv --tensors_filename data/hotrg_gilt_X24_lowB.pth --observables magnetization --double_layer
 python run_calculate_observables.py --output_filename data/hotrg_gilt_X24_highB_observables.csv --tensors_filename data/hotrg_gilt_X24_highB.pth --observables magnetization --double_layer
 
