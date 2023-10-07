@@ -30,6 +30,7 @@ def _toP(t):
 
 def wrap_pytorch(func):
     def _wrapper(v_numpy):
+        torch.cuda.empty_cache()
         assert len(v_numpy.shape)==1 or (len(v_numpy.shape)==2 and v_numpy.shape[1]==1)
         v_torch=torch.tensor(v_numpy).reshape(-1)
         u_torch=func(v_torch)
@@ -38,6 +39,7 @@ def wrap_pytorch(func):
             u_numpy=u_numpy.reshape(-1,1)
         else:
             u_numpy=u_numpy.reshape(-1)
+        torch.cuda.empty_cache()
         return u_numpy
     return _wrapper
 

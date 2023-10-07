@@ -5,7 +5,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--filename', type=str, required=True) # data/tnr_X16_L10
-parser.add_argument('--tensor_path', type=str, required=True) # data/tnr_X16_tensors.pkl
+parser.add_argument('--tensor_path', type=str, required=True) # data/tnr_X16_tensors.pth
 parser.add_argument('--iLayer', type=int, required=True) # 10
 parser.add_argument('--linearized_full', action='store_true')
 parser.add_argument('--linearized_use_jax', action='store_true')
@@ -24,10 +24,19 @@ parser.add_argument('--svd_num_eigvecs', type=int, default=16)
 parser.add_argument('--svd_sanity_check', action='store_true')
 parser.add_argument('--version', type=int, default=1)
 parser.add_argument('--device', type=str, default='cuda:0')
+parser.add_argument('--overwrite', action='store_true')
 
 args = parser.parse_args()
 options=vars(args)
 
+if options['filename'][-4:] == '.pth':
+    options['filename']=options['filename'][:-4]
+
+
+import os
+if not options['overwrite'] and os.path.exists(options['filename']+'.pth'):
+    print('file already exists, exiting')
+    exit()
 
 print('loading library...')
 
@@ -125,10 +134,7 @@ print(get_scaling_dimensions_from_spectrum(torch.as_tensor(sr).abs(),scaling=2))
 ur,sr=torch.tensor(ur),torch.tensor(sr)
 
 
-filename_txt=options['filename']
-if '.' in filename_txt[-5:]:
-    filename_txt=filename_txt.split('.')[0]
-filename_txt=filename_txt+'_scdims.txt'
+filename_txt=options['filename']+'_scdims.txt'
 os.makedirs(os.path.dirname(filename_txt),exist_ok=True)
 with open(filename_txt,'w') as f:
     print(get_scaling_dimensions_from_spectrum(torch.as_tensor(sr).abs(),scaling=2).detach().cpu().numpy(),file=f)
@@ -137,7 +143,7 @@ print('file saved: ',filename_txt)
 
 
 
-filename=options['filename']
+filename=options['filename']+'.pth'
 
 torch.save((options,sr,ur),filename)
 print('file saved: ',filename)
