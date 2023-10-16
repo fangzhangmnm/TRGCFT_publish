@@ -127,10 +127,10 @@ def random_rel_to_corner(lx,ly):
     assert x>=0 and x<lx
     assert y>=0 and y<ly
     return x,y
-def generate_smearing_corner_points(lattice_size):
+def generate_smearing_corner_points(lattice_size,data_count=128):
     coordsss=[]
     for l in range(0,20):
-        for i in range(128):
+        for i in range(data_count):
             lx=2**(l//2) if l%2==0 else 2**(l//2+1)
             ly=2**(l//2)
             if l%2==0:
@@ -161,7 +161,7 @@ def generate_smearing_corner_points(lattice_size):
             coordsss.append(((x0,y0),(x1,y1)))
     return coordsss
 lattice_size=(2**10,2**10)
-coordsss=generate_smearing_corner_points(lattice_size)
+coordsss=generate_smearing_corner_points(lattice_size,data_count=1024)
 validate_and_save('data/smearing_corner_10.pkl',coordsss,lattice_size)
 
 

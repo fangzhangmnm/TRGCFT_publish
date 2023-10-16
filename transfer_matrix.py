@@ -75,23 +75,41 @@ def get_transfer_matrix_operator(T,n:'tuple[int]'):
     return M
 
 def fix_normalize(T,norms,volume_scaling=2,is_HOTRG=False):
+    # evolve(q*T)=q**scaling * evolve(T)
+    # we want to find q such that evolve(q*T)≈q*T
+
     if not is_HOTRG:
-        # evolve(T/norm)=T
-        # q T=evolve(q T)=q**scaling * norm**scaling T
+        # evolve(T/norm) ≈ T
+        # evolve(T) ≈ norm**scaling * T
+        # evolve(q*T) ≈ q**scaling * norm**scaling * T ≈ q*T
+        # q ≈ norm**(scaling/(1-scaling))
         q=norms[-1]**(volume_scaling/(1-volume_scaling))
     else:
-        # evolve(...evolve(T/norms[0])/norms[1]...)=T
-        # q T=evolve(...evolve(q T)...)
-        #    =q**(scaling**dim) * norms[0]**(scaling**dim) *...* norms[-1]**(scaling)
+        # for spacial_dim==2
+        # evolve(evolve(T/norms[0])/norms[1]) ≈ T
+        # evolve(evolve(T)) ≈ norms[0]**(scaling**2) * norms[1]**scaling * T
+        # evolve(evolve(q*T)) ≈ q**(scaling**2) * norms[0]**(scaling**2) * norms[1]**scaling * T ≈ q*T
+
+        # generally
+        # q T ≈ q**(scaling**dim) * norms[0]**(scaling**dim) *...* norms[-1]**(scaling)
+
         spacial_dim=len(T.shape)//2
-        norms=([1]*spacial_dim+norms)[-spacial_dim:]
-        norms=[norms[-1]]+norms[:-1]#why
+        norms=([1]*spacial_dim+list(norms))[-spacial_dim:]
+        # norms=[norms[-1]]+norms[:-1]#why
         q=1
         for axis in range(spacial_dim):
             q=q * norms[axis]**(volume_scaling**(spacial_dim-axis))
         q=q**(1/(1-volume_scaling**spacial_dim))
     return q*T
 
+def fix_normalize_new_2D_HOTRG(T):
+    trace4T=contract('ijab,klba,jicd,lkdc->',T,T,T,T)
+    traceT=contract('iiaa->',T)
+    # trace(qT)=trace(qT,qT,qT,qT)
+    # q*trace(T)=q**4 * trace(T,T,T,T)
+    # q**3 = trace(T)/trace(T,T,T,T)
+    q=(traceT/trace4T)**(1/3)
+    return q*T
 
 
 # def get_scdims(T,n=2,k=10,tensor_block_height=1):

@@ -24,7 +24,7 @@ parser.add_argument('--hotrg_sanity_check', action='store_true')
 parser.add_argument('--version', type=int, default=1)
 parser.add_argument('--device', type=str, default='cuda:0')
 parser.add_argument('--overwrite', action='store_true')
-
+parser.add_argument('--method',choices=['obs','all_norm','final_norm','logZ'],default='obs')
 args = parser.parse_args()
 options=vars(args)
 
@@ -110,17 +110,23 @@ while beta_max-beta_min>options['tol']:
         break
     params[param_name]=beta_new
     T_new,logZ_new,obs_new,dNorm_new=eval_model(params)
-    print_and_log('beta_min=',beta_min,'beta_new=',beta_new,'beta_max=',beta_max,'beta_ref',beta_ref)
+    print_and_log('beta_min=',beta_min,'beta_new=',beta_new,'beta_max=',beta_max,'beta_ref',beta_ref,'beta_diff=',beta_max-beta_min)
     print_and_log('logZ_min=',logZ_min.item(),'logZ_new=',logZ_new.item(),'logZ_max=',logZ_max.item())
     print_and_log('obs_min=',obs_min.item(),'obs_new=',obs_new.item(),'obs_max=',obs_max.item())
-    #dist_min=(logZ_min-logZ_new).abs()
-    #dist_max=(logZ_max-logZ_new).abs()
+    if options['method']=='logZ':
+        dist_min=(logZ_min-logZ_new).abs()
+        dist_max=(logZ_max-logZ_new).abs()
+    elif options['method']=='obs':
+        dist_min=(obs_min-obs_new).abs()
+        dist_max=(obs_max-obs_new).abs()
+    elif options['method']=='all_norm':
+        dist_min=(dNorm_min-dNorm_new).norm()
+        dist_max=(dNorm_max-dNorm_new).norm()
+    elif options['method']=='final_norm':
+        dist_min=(dNorm_min[-1]-dNorm_new[-1]).abs()
+        dist_max=(dNorm_max[-1]-dNorm_new[-1]).abs()
     #dist_min=contract('ijkl,ijkl->',T_min,T_new).abs()
     #dist_max=contract('ijkl,ijkl->',T_max,T_new).abs()
-    # dist_min=(obs_min-obs_new).abs()
-    # dist_max=(obs_max-obs_new).abs()
-    dist_min=(dNorm_min-dNorm_new).norm()
-    dist_max=(dNorm_max-dNorm_new).norm()
     print_and_log('dist_min=',dist_min,'dist_max=',dist_max)
     if dist_min<dist_max:
         print_and_log('keeping beta_max')
@@ -152,6 +158,6 @@ if not os.path.exists(dirname):
 
 torch.save({param_name:beta_new},filename)
 
-    
-logfile.close()
+if logfile is not None:
+    logfile.close()
     

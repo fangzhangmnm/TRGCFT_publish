@@ -11,6 +11,7 @@ parser.add_argument('--tensor_path', type=str, required=True) # data/tnr_X16_ten
 parser.add_argument('--loop_length', type=int, default=2)
 parser.add_argument('--is_HOTRG', action='store_true')
 parser.add_argument('--num_scaling_dims', type=int, default=16)
+parser.add_argument('--overwrite', action='store_true')
 
 parser.add_argument('--version', type=int, default=1)
 parser.add_argument('--device', type=str, default='cuda:0')
@@ -40,7 +41,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from HOTRG import cg_tensor_norm
 from transfer_matrix import (
-    fix_normalize,
+    fix_normalize,fix_normalize_new_2D_HOTRG,
     get_transfer_matrix_spectrum,
     get_transfer_matrix_scaling,
     get_central_charge_from_spectrum,
@@ -121,16 +122,33 @@ def show_effective_rank(Ts,filename=None):
         plt.close()
     return curve
 
-def show_scaling_dimensions(Ts,loop_length=2,num_scaling_dims=8,volume_scaling=2,is_HOTRG=False,reference_scaling_dimensions=None, reference_center_charge=None,filename=None,display=True,stride=1):
+def trace_norm(T):
+    return contract('iijj->',T).abs()
+
+def show_scaling_dimensions(Ts,logTotals,loop_length=2,num_scaling_dims=8,volume_scaling=2,is_HOTRG=False,reference_scaling_dimensions=None, reference_center_charge=None,filename=None,display=True,stride=1):
     curve=[]
-    def pad(v):
-        return np.pad(v,(0,num_scaling_dims))[:num_scaling_dims]
     spacial_dim=len(Ts[0].shape)//2
-    norms=list(map(cg_tensor_norm,Ts))
+
+    # # logTotals[i+1]=2*(logTotals[i]+np.log(norms[i])), logTotals[0]=0
+    # print(logTotals)
+    # logTotals=np.array([x.item() if isinstance(x,torch.Tensor) else x for x in logTotals])
+    # norms=np.exp(logTotals[1:]/2-logTotals[:-1])
+    # print(norms)
+    # # not good, because when logTotal grows very big, 
+    # # the difference between logTotal[i+1]/2-logTotal[i] is below the float error
+    # # also the last logtotal is missing
+
+
+    norms=np.array([cg_tensor_norm(T).item() for T in Ts])
+    # print(norms)
+
+
     for iLayer,A in tqdm([*enumerate(Ts)]):
         if iLayer%stride!=0:
             continue
-        A=fix_normalize(A,is_HOTRG=is_HOTRG,volume_scaling=volume_scaling,norms=norms[:iLayer+1])
+        # A=fix_normalize(A,is_HOTRG=is_HOTRG,volume_scaling=volume_scaling,norms=norms[:iLayer+1])
+        assert spacial_dim==2
+        A=fix_normalize_new_2D_HOTRG(A)
         if spacial_dim==2:
             if is_HOTRG:
                 aspect=[loop_length,loop_length*2][iLayer%2]
@@ -145,6 +163,8 @@ def show_scaling_dimensions(Ts,loop_length=2,num_scaling_dims=8,volume_scaling=2
         scaling=get_transfer_matrix_scaling(A,n=loop_length,tensor_block_height=tensor_block_height)
 
         center_charge=get_central_charge_from_spectrum(spectrum,scaling=scaling).item()
+        def pad(v):
+            return np.pad(v,(0,num_scaling_dims))[:num_scaling_dims]
         scaling_dimensions=pad(get_scaling_dimensions_from_spectrum(spectrum,scaling=scaling).tolist())
         spectrum=pad(spectrum.tolist())
         
@@ -238,14 +258,22 @@ reference_scaling_dimensions=[0,0.125,1,1.125,2,2.125,3,3.125,4,4.125,5,5.125]
 reference_central_charge=.5
 
 stride=2 if options['is_HOTRG'] else 1
-diff_curve=show_diff(Ts,stride=stride,filename=options['filename'])
-effective_rank_curve=show_effective_rank(Ts,filename=options['filename'])
-scaling_dimensions_curve=show_scaling_dimensions(Ts,
+scaling_dimensions_curve=show_scaling_dimensions(Ts, logTotals,
                         loop_length=options['loop_length'],
                         num_scaling_dims=options['num_scaling_dims'],
                         is_HOTRG=options['is_HOTRG'],
                         filename=options['filename'],
                         reference_scaling_dimensions=reference_scaling_dimensions,
                         reference_center_charge=reference_central_charge)
+diff_curve=show_diff(Ts,stride=stride,filename=options['filename'])
+effective_rank_curve=show_effective_rank(Ts,filename=options['filename'])
 torch.save((diff_curve,effective_rank_curve,scaling_dimensions_curve),options['filename']+'_curves.pth')
 print('saved to',options['filename']+'_curves.pth')
+
+# save csv
+diff_curve.to_csv(options['filename']+'_diff.csv')
+effective_rank_curve.to_csv(options['filename']+'_rank.csv')
+scaling_dimensions_curve.to_csv(options['filename']+'_scDim.csv')
+print('saved to',options['filename']+'_diff.csv')
+print('saved to',options['filename']+'_rank.csv')
+print('saved to',options['filename']+'_scDim.csv')

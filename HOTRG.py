@@ -77,13 +77,15 @@ def forward_layer(Ta,Tb,layer:HOTRGLayer,use_checkpoint=False)->torch.Tensor:
     return _checkpoint(_forward_layer,[Ta,Tb],{'layer':layer},use_checkpoint=use_checkpoint)
 
 def cg_tensor_norm(T):
-    contract_path={4:'iijj->',6:'iijjkk->'}[len(T.shape)]
-    norm=contract(contract_path,T).norm()
-    if norm<1e-6*T.norm():#fallback
-        # print('cg_tensor_norm: fallback',T.shape)
-        norm=T.norm()
-    # norm=T.norm()
-    #print(norm)
+    # contract_path={4:'iijj->',6:'iijjkk->'}[len(T.shape)]
+    # norm=contract(contract_path,T).norm()
+    # if norm<1e-6*T.norm():#fallback
+    #     # print('cg_tensor_norm: fallback',T.shape)
+    #     norm=T.norm()
+    # # norm=T.norm()
+    # #print(norm)
+    # decided to use the normal norm
+    norm=torch.norm(T,dim=None)
     return norm
     
 def to_unitary(g):

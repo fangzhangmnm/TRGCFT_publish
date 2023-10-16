@@ -3,6 +3,7 @@
 NLAYERS=60
 MAX_DIM=24
 DEVICE="cuda:0"
+GILT_EPS=8e-7
 # beta_critical=0.44068381958007813
 
 # take beta_critical as 0.440684
@@ -19,7 +20,7 @@ BETAS=(
 
 for BETA in "${BETAS[@]}";
 do
-    python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --mcf_enabled --model Ising2D --params '{"beta":'${BETA}'}'
+    python run_HOTRG.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --nLayers ${NLAYERS} --max_dim ${MAX_DIM} --gilt_enabled --gilt_eps ${GILT_EPS} --mcf_enabled --model Ising2D --params '{"beta":'${BETA}'}'
     python run_plot_scdims.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA} --tensor_path data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --is_HOTRG --num_scaling_dims 32 --device ${DEVICE}
     python run_calculate_correlation.py --filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}_correlation.pkl --points_filename data/2pt_correlation_points_30.pkl --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --log2Size 30 --device ${DEVICE}
     python run_calculate_observables.py --output_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}_observables.csv --tensors_filename data/hotrg_gilt_X${MAX_DIM}_betas/${BETA}.pth --observables magnetization --double_layer --device ${DEVICE}
