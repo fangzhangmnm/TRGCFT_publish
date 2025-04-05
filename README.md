@@ -9,7 +9,7 @@ We present a comprehensive study on the extraction of CFT data using tensor netw
 
 ## How to run the code
 
-- run test_all.sh to generate the data
+- run `test_main.sh`, `test_layers.sh`,... to generate the data
 - run plot_XXX.ipynb jupyter notebooks to plot the graph
 
 enjoy
